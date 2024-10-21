@@ -1,0 +1,172 @@
+
+#ggc compilation aliases :c89, c99 ,debugmode, relese mode
+alias gd='gcc -ansi -pedantic-errors -Wall -Wextra -g'
+alias gc='gcc -ansi -pedantic-errors -Wall -Wextra -DNDEBUG -o3'
+alias gd9='gcc -std=c99  -pedantic-errors -Wall -Wextra -g'
+alias gc9='gcc -std=c99 -pedantic-errors -Wall -Wexta -DNDEBUG -o3'
+
+
+#Build C without warnings as errors
+alias buildc='gcc -Wno-error '
+
+#Build C++98 release
+alias cppr98='g++ -std=c++98 -O2 '
+
+#Build C++98 debug
+alias cppd98='g++ -std=c++98 -g '
+alias cgpall="cppd98 *.cpp"
+
+#Build C++98 release with warnings as errors
+alias cppr98we='g++ -std=c++98 -Werror -O2 '
+
+#Build C++98 debug with warnings as errors
+alias cppd98we='g++ -std=c++98 -Werror -g '
+
+#Build C++11 release
+alias cppr11='g++ -std=c++11 -O2 '
+
+#Build C++11 debug
+alias cppd11='g++ -std=c++11 -g '
+
+#Build C++11 release with warnings as errors
+alias cppr11we='g++ -std=c++11 -Werror -O2 '
+
+#Build C++11 debug with warnings as errors
+alias cppd11we='g++ -std=c++11 -Werror -g '
+#-------------------------------------------------------------------------------
+
+#git alias
+alias gac='cd ~/git && git add . && commit -m' 
+
+#generate obj(no link):
+alias gdnl='gd -c'
+
+#Valgrind alias
+alias vlg='valgrind --track-origins=yes --leak-check=yes'
+
+#archive alias
+alias arf='tar -czvf arik_review.tar.gz'
+
+
+
+#function:
+
+# Function to commit and push changes to a specified Git branch
+git_push_changes() {
+    # Check if a branch name is provided
+    if [ -z "$1" ]; then
+        echo "Error: No branch name provided."
+        echo "Usage: git_push_changes <branch_name>"
+        return 1
+    fi
+
+    branch_name=$1
+
+    # Add all changes to the staging area
+    git add .
+
+    # Commit the changes
+    echo "Enter a commit message: "
+    read commit_message
+
+    if [ -z "$commit_message" ]; then
+        echo "Error: Commit message cannot be empty."
+        return 1
+    fi
+
+    git commit -m "$commit_message"
+
+    # Push the changes to the provided branch
+    git push origin "$branch_name"
+
+    if [ $? -eq 0 ]; then
+        echo "Changes pushed to branch '$branch_name' successfully."
+    else
+        echo "Error: Failed to push changes to branch '$branch_name'."
+    fi
+}
+
+# Function to commit and push changes to all local Git branches
+git_push_all_branches() {
+    # Add all changes to the staging area
+    git add .
+
+    # Commit the changes
+    echo "Enter a commit message: "
+    read commit_message
+
+    if [ -z "$commit_message" ]; then
+        echo "Error: Commit message cannot be empty."
+        return 1
+    fi
+
+    git commit -m "$commit_message"
+
+    # Get the list of all local branches
+    branches=$(git branch --format='%(refname:short)')
+
+    # Loop through each branch and push changes
+    for branch in $branches; do
+        echo "Pushing changes to branch '$branch'..."
+        git push origin "$branch"
+
+        if [ $? -eq 0 ]; then
+            echo "Changes pushed to branch '$branch' successfully."
+        else
+            echo "Error: Failed to push changes to branch '$branch'."
+        fi
+    done
+}
+
+
+
+function goto {
+
+	if [ $# -lt 1 ]; then
+		echo "Usage: goto <directory-name>"
+		return 1
+	fi
+	
+	directory=$(find "$HOME" -type d -name "$1" -print -quit 2>/dev/null)
+	
+	if [ -z "$directory" ];then
+		echo "directory not found."
+	else
+		cd "$directory"
+	fi
+}
+
+alias coredumps="nautilus /var/lib/apport/coredump"
+alias allowcore="ulimit -c unlimited;ulimit -c"
+alias disablecore="ulimit -c 0;ulimit -c"
+alias removecore="sudo rm -f /var/lib/apport/coredump/*"
+alias cleancore="removecore"
+	
+function buse1 {
+
+	make; 
+	echo "make";
+	
+	sudo modprobe nbd; 
+	echo "modprobe nbd";
+	sudo chmod 777 /sys/block/nbd0/queue/max_sectors_kb;
+	echo 4 > /sys/block/nbd0/queue/max_sectors_kb;
+	sudo ./busexmp 128M /dev/nbd0;
+}
+
+function buse2 {
+
+	sudo mkfs.ext4 /dev/nbd0; 
+	echo "mkfs.ext4 /dev/nbd0";
+	
+	sudo mount /dev/nbd0 ./nbd_files; 
+	echo "mount /dev/nbd0 ./nbd_files";
+	
+	sudo chmod 777 ./nbd_files;
+	echo "chmod 777 ./nbd_files";	
+}
+	
+	
+	
+	
+	

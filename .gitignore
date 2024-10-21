@@ -1,0 +1,27 @@
+# ignore all files
+/**
+
+# do not ignore all files in the root directory.
+!/*
+
+# do not ignore directories
+!/**/
+
+#ignore:
+cpp/sandbox/
+sandbox/
+.funfuncs
+.tricks
+.vscode
+githubtoken
+
+
+# do not ignore .c .h and .sh
+!**.c
+!**.cpp
+!**.h
+!**.hpp
+!**.sh
+!**.md
+!**makefile
+
